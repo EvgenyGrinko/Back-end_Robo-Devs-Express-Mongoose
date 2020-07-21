@@ -1,0 +1,33 @@
+{
+  "name": "back-end_robo-devs-express-mongoose",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app",
+    "server": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvgenyGrinko/Back-end_Robo-Devs-Express-Mongoose.git"
+  },
+  "author": "EvgenyGrinko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvgenyGrinko/Back-end_Robo-Devs-Express-Mongoose/issues"
+  },
+  "homepage": "https://github.com/EvgenyGrinko/Back-end_Robo-Devs-Express-Mongoose#readme",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "axios": "^0.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.25",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
