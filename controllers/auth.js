@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 const {
   registerValidation,
   loginValidation,
@@ -9,6 +10,8 @@ const {
 // @access  Public
 exports.registerUser = async (req, res, next) => {
   const { error } = registerValidation(req.body);
+  const { name, email, password } = req.body;
+
   if (error) {
     return res
       .status(403)
@@ -21,12 +24,14 @@ exports.registerUser = async (req, res, next) => {
       .status(400)
       .json({ success: false, error: "Email already exists" });
 
+  //Hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
   //Create a new user
-  const { name, email, password } = req.body;
   const user = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
   });
   try {
     const savedUser = await user.save();
