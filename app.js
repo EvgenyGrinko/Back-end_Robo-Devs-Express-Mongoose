@@ -1,6 +1,5 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const path = require("path");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
@@ -8,20 +7,19 @@ dotenv.config({ path: "./config/config.env" });
 
 connectDB();
 
-// const transactions = require("./routes/transactions");
+//Import routes
 const developers = require("./routes/developers");
+const authRoute = require('./routes/auth');
 
 const app = express();
 
-app.use(express.json());
+//Middlewares
+app.use(express.json());//body parser
 app.use(cors());
 
-// app.use("/api/v1/transactions", transactions);
+//Route middlewares
 app.use("/api/developers", developers);
-
-app.use(
-  express.static(path.join("/home/user/Desktop/robo-developers/client/"))
-);
+app.use("/api/user", authRoute);
 
 const PORT = process.env.PORT || 4000;
 

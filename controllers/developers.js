@@ -1,6 +1,6 @@
 const Developer = require("../models/Developer");
 const axios = require("axios");
-const ValidationError = require("../validation/ValidationError");
+const { addEditValidation } = require("../validation/validations");
 
 // @desc    Get all developers
 // @route   GET /api/developers
@@ -66,7 +66,7 @@ exports.getDeveloper = async (req, res, next) => {
 // @access  Public
 exports.addDeveloper = async (req, res, next) => {
   try {
-    const { error } = ValidationError(req.body);
+    const { error } = addEditValidation(req.body);
     if (error) {
       return res
         .status(403)
@@ -134,7 +134,7 @@ exports.editDeveloper = async (req, res, next) => {
         error: "No developer found",
       });
     }
-    const { error } = ValidationError(req.body);
+    const { error } = addEditValidation(req.body);
     if (error) {
       return res
         .status(403)
