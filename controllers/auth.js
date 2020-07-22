@@ -1,12 +1,13 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const {
   registerValidation,
   loginValidation,
 } = require("../validation/validations");
 
 // @desc    Register new user
-// @route   POST /api/user
+// @route   POST /api/user/register
 // @access  Public
 exports.registerUser = async (req, res, next) => {
   const { error } = registerValidation(req.body);
@@ -48,15 +49,35 @@ exports.registerUser = async (req, res, next) => {
 };
 
 // @desc    Login user
-// @route   POST /api/user
+// @route   POST /api/user/login
 // @access  Public
-exports.loginUser = (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
   const { error } = loginValidation(req.body);
+  const { email, password } = req.body;
   if (error) {
     return res
       .status(403)
       .json({ success: false, error: error.details[0].message });
   }
+
+  //Checking if the email exist
+  const user = await User.findOne({ email: email });
+  if (!user)
+    return res
+      .status(400)
+      .json({ success: false, error: "Email is not found" });
+  //Password is correct
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword)
+    return res.status(400).json({ success: false, error: "Invalid password" });
+
+  //Create and assign a token
+  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+  res
+    .header("auth-token", token)
+    .status(200)
+    .json({ success: true, message: "Logged in", token: token });
+
   try {
   } catch (err) {}
 };

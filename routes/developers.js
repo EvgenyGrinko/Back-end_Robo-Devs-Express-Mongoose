@@ -7,13 +7,14 @@ const {
   deleteDeveloper,
   editDeveloper,
 } = require("../controllers/developers");
+const verify = require("../controllers/verifyToken");
 
-router.route("/").get(getDevelopers).post(addDeveloper);
+router.route("/").get(verify, getDevelopers).post(verify, addDeveloper);
 
 router
   .route("/:id")
-  .get(getDeveloper)
-  .delete(deleteDeveloper)
-  .patch(editDeveloper);
+  .get(verify, getDeveloper)
+  .delete(verify, deleteDeveloper)
+  .patch(verify, editDeveloper);
 
 module.exports = router;
