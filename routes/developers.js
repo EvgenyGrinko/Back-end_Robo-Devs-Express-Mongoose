@@ -9,12 +9,12 @@ const {
 } = require("../controllers/developers");
 const verify = require("../controllers/verifyToken");
 
-router.route("/").get(verify, getDevelopers).post(verify, addDeveloper);
+router.route("/").get(getDevelopers).post(addDeveloper);
 
 router
   .route("/:id")
-  .get(verify, getDeveloper)
-  .delete(verify, deleteDeveloper)
-  .patch(verify, editDeveloper);
+  .get(getDeveloper)
+  .delete(deleteDeveloper)
+  .patch(editDeveloper);
 
 module.exports = router;

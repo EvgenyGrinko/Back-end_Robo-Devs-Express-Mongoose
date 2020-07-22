@@ -34,12 +34,21 @@ exports.registerUser = async (req, res, next) => {
     email,
     password: hashedPassword,
   });
+
   try {
     const savedUser = await user.save();
-    res.status(200).json({
-      success: true,
-      user: savedUser,
-    });
+    //Create and assign a token
+    const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET);
+
+    res
+      .header("auth-token", token)
+      .status(200)
+      .json({ success: true, message: "Logged in", token: token });
+
+    // res.status(200).json({
+    //   success: true,
+    //   user: savedUser,
+    // });
   } catch (err) {
     return res.status(500).json({
       success: "false",
@@ -60,7 +69,7 @@ exports.loginUser = async (req, res, next) => {
       .json({ success: false, error: error.details[0].message });
   }
 
-  //Checking if the email exist
+  //Checking if the email exists
   const user = await User.findOne({ email: email });
   if (!user)
     return res
@@ -77,7 +86,4 @@ exports.loginUser = async (req, res, next) => {
     .header("auth-token", token)
     .status(200)
     .json({ success: true, message: "Logged in", token: token });
-
-  try {
-  } catch (err) {}
 };
