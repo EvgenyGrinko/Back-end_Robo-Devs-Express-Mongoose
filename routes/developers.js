@@ -7,6 +7,7 @@ const {
   deleteDeveloper,
   editDeveloper,
 } = require("../controllers/developers");
+const {verifyToken} = require('../controllers/verifyTokenFromFront')
 const verify = require("../controllers/verifyToken");
 
 router.route("/").get(getDevelopers).post(addDeveloper);
@@ -16,5 +17,7 @@ router
   .get(getDeveloper)
   .delete(deleteDeveloper)
   .patch(editDeveloper);
+
+router.route("/auth").post(verifyToken);
 
 module.exports = router;
