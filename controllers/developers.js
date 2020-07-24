@@ -72,7 +72,22 @@ exports.addDeveloper = async (req, res, next) => {
         .status(403)
         .json({ success: false, error: error.details[0].message });
     }
-    const developer = await Developer.create(req.body);
+    const developerData = req.body;
+    //if an avatar for developer is not provided, add default randomly
+    if (!developerData.avatar)
+      developerData.avatar = `https://robohash.org/${Math.random()}`;
+
+    const foundDeveloper = await Developer.findOne({
+      email: developerData.email,
+    });
+    if (foundDeveloper)
+      res
+        .status(400)
+        .json({
+          success: false,
+          error: "Developer with this email already exists",
+        });
+    const developer = await Developer.create(developerData);
     return res.status(201).json({
       success: true,
       developer: developer,
