@@ -21,9 +21,11 @@ exports.registerUser = async (req, res, next) => {
   //Checking if the user is already in the database
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist)
-    return res
-      .status(400)
-      .json({ success: false, isUserEmailAlreadyExists: true, error: "Email already exists" });
+    return res.status(400).json({
+      success: false,
+      isUserEmailAlreadyExists: true,
+      error: "Email already exists",
+    });
 
   //Hash password
   const salt = await bcrypt.genSalt(10);
@@ -72,13 +74,21 @@ exports.loginUser = async (req, res, next) => {
   //Checking if the email exists
   const user = await User.findOne({ email: email });
   if (!user)
-    return res
-      .status(400)
-      .json({ success: false, error: "Email is not found" });
+    return res.status(400).json({
+      success: false,
+      isUserEmailExists: false,
+      isLoginPasswordCorrect: true,
+      error: "This email is not registered",
+    });
   //Password is correct
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword)
-    return res.status(400).json({ success: false, error: "Invalid password" });
+    return res.status(400).json({
+      success: false,
+      isUserEmailExists: true,
+      isLoginPasswordCorrect: false,
+      error: "Invalid password",
+    });
 
   //Create and assign a token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
