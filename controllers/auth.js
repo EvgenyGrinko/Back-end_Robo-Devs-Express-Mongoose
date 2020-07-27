@@ -23,7 +23,7 @@ exports.registerUser = async (req, res, next) => {
   if (emailExist)
     return res
       .status(400)
-      .json({ success: false, error: "Email already exists" });
+      .json({ success: false, isUserEmailAlreadyExists: true, error: "Email already exists" });
 
   //Hash password
   const salt = await bcrypt.genSalt(10);

@@ -81,12 +81,11 @@ exports.addDeveloper = async (req, res, next) => {
       email: developerData.email,
     });
     if (foundDeveloper)
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: "Developer with this email already exists",
-        });
+      res.status(400).json({
+        success: false,
+        error: "Developer with this email already exists",
+        isDeveloperEmailAlreadyExists: true,
+      });
     const developer = await Developer.create(developerData);
     return res.status(201).json({
       success: true,
