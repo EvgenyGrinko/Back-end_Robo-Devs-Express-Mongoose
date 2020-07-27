@@ -148,16 +148,25 @@ exports.editDeveloper = async (req, res, next) => {
         error: "No developer found",
       });
     }
-    const { error } = addEditValidation(req.body);
+    const edittedDeveloper = req.body;
+    const { error } = addEditValidation(edittedDeveloper);
     if (error) {
       return res
         .status(403)
         .json({ success: false, error: error.details[0].message });
     }
-    await Developer.updateOne({ _id: req.params.id }, req.body);
+    //Check, if the editted email already exists in the db
+    const foundDeveloper = await Developer.findOne({
+      email: edittedDeveloper.email,
+    });
+    if (foundDeveloper && foundDeveloper.email !== developer.email)
+      return res
+        .status(400)
+        .json({ success: false, error: `This email already exists` });
+    await Developer.updateOne({ _id: req.params.id }, edittedDeveloper);
     return res.status(200).json({
       success: true,
-      developer: req.body,
+      developer: edittedDeveloper,
     });
   } catch (err) {
     return res.status(500).json({
