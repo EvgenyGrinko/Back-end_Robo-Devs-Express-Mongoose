@@ -6,9 +6,12 @@ const {
   addDeveloper,
   deleteDeveloper,
   editDeveloper,
+  findDevelopers,
 } = require("../controllers/developers");
-const {verifyToken} = require('../controllers/verifyTokenFromFront')
+const { verifyToken } = require("../controllers/verifyTokenFromFront");
 const verify = require("../controllers/verifyToken");
+
+router.route("/search").get(findDevelopers);
 
 router.route("/").get(getDevelopers).post(addDeveloper);
 

@@ -175,3 +175,31 @@ exports.editDeveloper = async (req, res, next) => {
     });
   }
 };
+
+// @desc    Find developers
+// @route   GET /api/developers/search/?query=example
+// @access  Public
+exports.findDevelopers = async (req, res, next) => {
+  try {
+    const query = req.query.query;
+    // if (!query) return res.status(401).json({ message: "No query" });
+    // const foundDevelopers = await Developer.find({
+    //   $text: { $search: `\"${query}\"` },
+    // });
+    const developers = await Developer.find();
+    const foundDevelopers = developers.filter((item) => {
+      return item.name.toLowerCase().includes(query.toLowerCase());
+    });
+    return res.status(200).json({
+      success: true,
+      length: foundDevelopers.length,
+      developers: foundDevelopers,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      here: "here",
+      error: "Server Error",
+    });
+  }
+};
