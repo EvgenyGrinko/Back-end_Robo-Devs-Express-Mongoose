@@ -61,6 +61,47 @@ exports.getDeveloper = async (req, res, next) => {
   }
 };
 
+// @desc    Get few developers
+// @route   GET /api/developers/few/?number=example
+// @access  Public
+exports.getFewDevelopers = async (req, res, next) => {
+  try {
+    const { number } = req.query;
+    const isNotDBEmpty = await Developer.count({}, (err) => {});
+    const devs = [];
+    if (!isNotDBEmpty) {
+      const url = "https://jsonplaceholder.typicode.com/users";
+      const { data } = await axios.get(url);
+      data.forEach((item, index) => {
+        const devWithAvatar = {
+          ...item,
+          avatar: "https://robohash.org/" + index,
+        };
+        devs.push(devWithAvatar);
+      });
+      await Developer.insertMany(devs, (err) => {
+        res.status(400).json({
+          success: false,
+          error: err,
+          message: `Can't insert developers to the DB`,
+        });
+      });
+    }
+    const developers = await Developer.find();
+    const fewDevelopers = developers.slice(0, number);
+    return res.status(200).json({
+      success: true,
+      count: fewDevelopers.length,
+      developers: fewDevelopers,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: "false",
+      error: "Server Error",
+    });
+  }
+};
+
 // @desc    Add developer
 // @route   POST /api/developers
 // @access  Public

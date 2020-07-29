@@ -7,11 +7,14 @@ const {
   deleteDeveloper,
   editDeveloper,
   findDevelopers,
+  getFewDevelopers,
 } = require("../controllers/developers");
 const { verifyToken } = require("../controllers/verifyTokenFromFront");
 const verify = require("../controllers/verifyToken");
 
 router.route("/search").get(findDevelopers);
+
+router.route("/few").get(getFewDevelopers);
 
 router.route("/").get(getDevelopers).post(addDeveloper);
 
