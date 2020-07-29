@@ -39,18 +39,9 @@ exports.registerUser = async (req, res, next) => {
 
   try {
     const savedUser = await user.save();
-    //Create and assign a token
-    const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET);
-
     res
-      .header("auth-token", token)
       .status(200)
-      .json({ success: true, message: "Logged in", token: token });
-
-    // res.status(200).json({
-    //   success: true,
-    //   user: savedUser,
-    // });
+      .json({ success: true, message: "New user registered", user: savedUser });
   } catch (err) {
     return res.status(500).json({
       success: "false",
@@ -95,5 +86,5 @@ exports.loginUser = async (req, res, next) => {
   res
     .header("auth-token", token)
     .status(200)
-    .json({ success: true, message: "Logged in", token: token });
+    .json({ success: true, message: "Logged in", user: user, token: token });
 };
